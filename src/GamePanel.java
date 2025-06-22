@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GamePanel extends JPanel implements MouseListener {
     Tile[] tiles;
@@ -102,16 +103,16 @@ public class GamePanel extends JPanel implements MouseListener {
             if (turnColor == 4 && id >= 4 && id <= 7) {
                 if (mod == 0) {
                     promotionPiece = new Knight(0, pawnId);
-                    img = new ImageIcon(getClass().getResource("pieces-basic-png/white-knight.png"));
+                    img = new ImageIcon(Objects.requireNonNull(getClass().getResource("pieces-basic-png/white-knight.png")));
                 } else if (mod == 1) {
                     promotionPiece = new Bishop(0, pawnId);
-                    img = new ImageIcon(getClass().getResource("pieces-basic-png/white-bishop.png"));
+                    img = new ImageIcon(Objects.requireNonNull(getClass().getResource("pieces-basic-png/white-bishop.png")));
                 } else if (mod == 2) {
                     promotionPiece = new Rook(0, pawnId);
-                    img = new ImageIcon(getClass().getResource("pieces-basic-png/white-rook.png"));
+                    img = new ImageIcon(Objects.requireNonNull(getClass().getResource("pieces-basic-png/white-rook.png")));
                 } else {
                     promotionPiece = new Queen(0, pawnId);
-                    img = new ImageIcon(getClass().getResource("pieces-basic-png/white-queen.png"));
+                    img = new ImageIcon(Objects.requireNonNull(getClass().getResource("pieces-basic-png/white-queen.png")));
                 }
             }
             if (turnColor == 5 && id >= 0 && id <= 3) {
@@ -296,17 +297,9 @@ public class GamePanel extends JPanel implements MouseListener {
 
 
         boolean leadsToCheck = isInCheck(color);
-        //check king diagonals for bishops and queens and pawns
-        //+7 +9 -7 -9
-        //check king straights for rooks
-        //+1 -1 +8 -8
-        //check kings eight spots for knights;
-
-
 
         tiles[id].piece = movingPiece;
 
-        //wuh oh why did i use this line
         movingPiece.id = id;
 
         if (movingPiece instanceof Pawn && move == enPassantId) {
@@ -315,7 +308,6 @@ public class GamePanel extends JPanel implements MouseListener {
             if (color == 0) tiles[move + 8].piece = possibleOldPiece;
         } else {
             tiles[move].piece = possibleOldPiece;
-            //tiles[id].piece = null;
         }
 
 
@@ -325,10 +317,8 @@ public class GamePanel extends JPanel implements MouseListener {
     }
 
     private boolean isInCheck(int color) {
+        //find the king, check if he can see any attackers
         int id = color == 0 ? pieces[28].id : pieces[4].id;
-        //check king diagonals for bishops and queens and pawns
-        //+7 +9 -7 -9
-        //king can see thorugh things right now
         int idUpLeft = id - 9;
         while (idUpLeft >= 0 && idUpLeft % 8 != 7) {
             Piece tilePiece = tiles[idUpLeft].piece;
@@ -369,9 +359,6 @@ public class GamePanel extends JPanel implements MouseListener {
             }
         }
 
-        //check king straights for rooks
-        //+1 -1 +8 -8
-
         int idUp = id - 8;
         while (idUp >= 0) {
             Piece tilePiece = tiles[idUp].piece;
@@ -393,7 +380,6 @@ public class GamePanel extends JPanel implements MouseListener {
             }
         }
         int idLeft = id - 1;
-        //idLeft >= 0 &&
         while (idLeft % 8 != 7 && idLeft >= 0) {
             Piece tilePiece = tiles[idLeft].piece;
             if (tilePiece != null && tilePiece.color != color && (tilePiece instanceof Rook || tilePiece instanceof Queen)) {
@@ -404,7 +390,6 @@ public class GamePanel extends JPanel implements MouseListener {
             }
         }
         int idRight = id + 1;
-        //idRight <= 63 &&
         while (idRight % 8 != 0) {
             Piece tilePiece = tiles[idRight].piece;
             if (tilePiece != null && tilePiece.color != color && (tilePiece instanceof Rook || tilePiece instanceof Queen)) {
@@ -416,62 +401,50 @@ public class GamePanel extends JPanel implements MouseListener {
         }
 
         //check kings eight spots for knights;
+        //can this be in a loop?
         if (id % 8 >= 2 && id / 8 >= 1) {
             if (tiles[id-10].piece != null && tiles[id-10].piece.color != color && tiles[id-10].piece instanceof Knight) {
                 return true;
             }
-
-
         }
         if (id % 8 >= 1 && id / 8 >= 2) {
-            //add -17
             if (tiles[id-17].piece != null && tiles[id-17].piece.color != color && tiles[id-17].piece instanceof Knight) {
                 return true;
             }
-
         }
         if (id % 8 >= 2 && id / 8 <= 6) {
-            //add +6
+
             if (tiles[id+6].piece != null && tiles[id+6].piece.color != color && tiles[id+6].piece instanceof Knight) {
                 return true;
             }
-
         }
         if (id % 8 >= 1 && id / 8 <= 5) {
             //add 15
             if (tiles[id+15].piece != null && tiles[id+15].piece.color != color && tiles[id+15].piece instanceof Knight) {
                 return true;
             }
-
         }
         if (id % 8 <= 5 && id / 8 >= 1) {
-            // add -6
             if (tiles[id-6].piece != null && tiles[id-6].piece.color != color && tiles[id-6].piece instanceof Knight) {
                 return true;
             }
-
         }
         if (id % 8 <= 6 && id / 8 >= 2) {
-            //add -15
             if (tiles[id-15].piece != null && tiles[id-15].piece.color != color && tiles[id-15].piece instanceof Knight) {
                 return true;
             }
-
         }
         if (id % 8 <= 6 && id / 8 <= 5) {
-            // add 17
             if (tiles[id+17].piece != null && tiles[id+17].piece.color != color && tiles[id+17].piece instanceof Knight) {
                 return true;
             }
-
         }
         if (id % 8 <= 5 && id / 8 <= 6) {
-            // add 10
             if (tiles[id+10].piece != null && tiles[id+10].piece.color != color && tiles[id+10].piece instanceof Knight) {
                 return true;
             }
-
         }
+        //pawns
         if (id % 8 > 0) {
             if (color == 1 && tiles[id +7].piece != null && tiles[id + 7].piece.color != color && tiles[id + 7].piece instanceof Pawn) {
                 return true;
@@ -480,7 +453,6 @@ public class GamePanel extends JPanel implements MouseListener {
                 return true;
             }
         }
-
         if (id % 8 < 7) {
             if (color == 1 && tiles[id + 9].piece != null && tiles[id + 9].piece.color != color && tiles[id + 9].piece instanceof Pawn) {
                 return true;
