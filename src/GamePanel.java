@@ -157,7 +157,7 @@ public class GamePanel extends JPanel implements MouseListener {
             selectedTileId = clickedTile.id;
             loadedMoves = possibleMoves(clickedTile.id);
             return;
-            //highlightLoadedMoves();
+
         }
         // color is changing in make move
         int col = turnColor == 1 ? 0 : 1;

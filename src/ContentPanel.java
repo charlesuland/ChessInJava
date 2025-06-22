@@ -7,4 +7,8 @@ public class ContentPanel extends JPanel {
         setBackground(Color.white);
 
     }
+
+    public void lexMove(String move) {
+
+    }
 }

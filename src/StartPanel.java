@@ -34,7 +34,7 @@ public class StartPanel extends JPanel implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // draw the rectangle here
+
         g.setColor(Color.orange);
         g.fillRect(340, 300, 200, 75);
 
